@@ -45,28 +45,46 @@ const map = {
   ["õ"]: 10,
 };
 
-const recursiveReduce = (values:number[]) => {
+const recursiveReduce = (values:number[], type?:string) => {
   const value = values.reduce((p,c) => p + c, 0)
-  if(value > 9) {
-    return recursiveReduce(value.toString().split("").map(v => Number(v)));
+
+  if(type === 'm' && (value === 11 || value === 22)){
+    return value;
   }
 
+
+  if(value > 9) {
+    return recursiveReduce(value.toString().split("").map(v => Number(v), type));
+  }
+
+
+
   return value;
+}
+
+const numeroMotivacao = (letter: string[]) => {
+  const vogais = ['a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'â', 'ê', 'ô', 'ã', 'õ']
+  const arr = letter.filter((l) => vogais.includes(l))
+  const result = recursiveReduce(arr.map(v => map[v]), 'm');
+  return result;
 }
 
 function App() {
   // const [count, setCount] = useState(0);
   const [value, setValue] = useState('tste');
+  const [motiv, setMotiv] = useState(0);
 
   return (
     <>
     <p>TESTE: {value}</p>
+    <p>Motivação: {motiv}</p>
 
 
     <input onChange={(txt) => {
       const name = txt.target.value.toLowerCase().split('');
       
       const result = recursiveReduce(name.map(v => map[v]));
+      setMotiv(numeroMotivacao(name))
 
       
       setValue(result)
