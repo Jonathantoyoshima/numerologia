@@ -4,7 +4,7 @@ interface Mapping {
   [key: string]: number; // Allows any string key, but value must be number
 }
 
-const map:Mapping = {
+const map: Mapping = {
   ["a"]: 1,
   ["b"]: 2,
   ["c"]: 3,
@@ -50,61 +50,127 @@ const map:Mapping = {
   ["õ"]: 10,
 };
 
-const vogais = ['a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'â', 'ê', 'ô', 'ã', 'õ'];
+const vogais = [
+  "a",
+  "e",
+  "i",
+  "o",
+  "u",
+  "á",
+  "é",
+  "í",
+  "ó",
+  "ú",
+  "â",
+  "ê",
+  "ô",
+  "ã",
+  "õ",
+];
 
+const recursiveReduce = (values: number[], type?: string) => {
+  const value = values.reduce((p, c) => p + c, 0);
 
-
-const recursiveReduce = (values:number[], type?:string) => {
-  const value = values.reduce((p,c) => p + c, 0)
-
-  if(type === 'm' && (value === 11 || value === 22)){
+  if (type === "m" && (value === 11 || value === 22)) {
     return value;
   }
 
-  if(value > 9) {
-    return recursiveReduce(value.toString().split("").map(v => Number(v), type));
+  if (value > 9) {
+    return recursiveReduce(
+      value
+        .toString()
+        .split("")
+        .map((v) => Number(v), type)
+    );
   }
 
   return value;
-}
+};
 
-const numeroMotivacao = (letter: string[]) => {  
-  const arr = letter.filter((l) => vogais.includes(l))
-  const result = recursiveReduce(arr.map(v => map[v]), 'm');
+const numeroMotivacao = (letter: string[]) => {
+  const arr = letter.filter((l) => vogais.includes(l));
+  const result = recursiveReduce(
+    arr.map((v) => map[v]),
+    "m"
+  );
   return result;
-}
+};
 
-const numeroImpressao = (letter: string[]) => {  
-  const arr = letter.filter((l) => !vogais.includes(l))
-  const result = recursiveReduce(arr.map(v => map[v]));
+const numeroImpressao = (letter: string[]) => {
+  const arr = letter.filter((l) => !vogais.includes(l));
+  const result = recursiveReduce(arr.map((v) => map[v]));
   return result;
-}
+};
+
+const numeroExpressao = (letter: string[]) => {
+  const result = recursiveReduce(letter.map((v) => map[v]));
+  return result;
+};
+
+const numeroDestino = (letter: string[], niver: number[]) => {
+  const result = recursiveReduce(letter.map((v) => map[v]).concat(niver), "m");
+  return result;
+};
+
+const numeroMissao = (base:number) => {
+  const result = recursiveReduce(String(base).split('').map(n => Number(n)), "m");
+  return result;
+};
 
 function App() {
-  // const [count, setCount] = useState(0);
-  const [value, setValue] = useState(0);
   const [motiv, setMotiv] = useState(0);
   const [imp, setImp] = useState(0);
+  const [exp, setExp] = useState(0);
+  const [dest, setDest] = useState(0);
+  const [miss, setMiss] = useState(0);
+
+  const [name, setName] = useState("");
+  const [niver, setNiver] = useState("");
+
+  const setValues = (thisname: string, thisniver: string) => {
+    const oName = thisname?.toLowerCase().split("") || [];
+    const oNiver =
+      thisniver
+        ?.toLowerCase()
+        .split("")
+        .map((n) => Number(n)) || [];
+
+    const nExp = numeroExpressao(oName);
+    const nDest = numeroDestino(oName, oNiver)
+
+    setMotiv(numeroMotivacao(oName));
+    setImp(numeroImpressao(oName));
+    setExp(nExp);
+    setDest(nDest);
+    setMiss(numeroMissao(nExp + nDest));
+  };
 
   return (
     <>
-    <p>TESTE: {value}</p>
-    <p>Motivação: {motiv}</p>
-    <p>Impressão: {imp}</p>
+      <p>Motivação: {motiv}</p>
+      <p>Impressão: {imp}</p>
+      <p>Expressão: {exp}</p>
+      <p>Destino: {dest}</p>
+      <p>Missão: {miss}</p>
 
-
-    <input onChange={(txt) => {
-      const name = txt.target.value.toLowerCase().split('');
-      
-      const result = recursiveReduce(name.map((v:any) => map[v] || 0));
-      setMotiv(numeroMotivacao(name));
-      setImp(numeroImpressao(name));
-
-      
-      setValue(result)
-    }}/>
-
-    
+      <div>
+        Nome sem espaços:
+        <input
+          onChange={(txt) => {
+            setName(txt.target.value ?? "");
+            setValues(txt.target.value, niver);
+          }}
+        />
+      </div>
+      <div>
+        Data somente números:
+        <input
+          onChange={(txt) => {
+            setNiver(txt.target.value ?? "");
+            setValues(name, txt.target.value);
+          }}
+        />
+      </div>
     </>
   );
 }
