@@ -1,5 +1,10 @@
 import { useState } from "react";
-const map = {
+
+interface Mapping {
+  [key: string]: number; // Allows any string key, but value must be number
+}
+
+const map:Mapping = {
   ["a"]: 1,
   ["b"]: 2,
   ["c"]: 3,
@@ -45,6 +50,10 @@ const map = {
   ["õ"]: 10,
 };
 
+const vogais = ['a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'â', 'ê', 'ô', 'ã', 'õ'];
+
+
+
 const recursiveReduce = (values:number[], type?:string) => {
   const value = values.reduce((p,c) => p + c, 0)
 
@@ -52,39 +61,44 @@ const recursiveReduce = (values:number[], type?:string) => {
     return value;
   }
 
-
   if(value > 9) {
     return recursiveReduce(value.toString().split("").map(v => Number(v), type));
   }
 
-
-
   return value;
 }
 
-const numeroMotivacao = (letter: string[]) => {
-  const vogais = ['a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'â', 'ê', 'ô', 'ã', 'õ']
+const numeroMotivacao = (letter: string[]) => {  
   const arr = letter.filter((l) => vogais.includes(l))
   const result = recursiveReduce(arr.map(v => map[v]), 'm');
   return result;
 }
 
+const numeroImpressao = (letter: string[]) => {  
+  const arr = letter.filter((l) => !vogais.includes(l))
+  const result = recursiveReduce(arr.map(v => map[v]));
+  return result;
+}
+
 function App() {
   // const [count, setCount] = useState(0);
-  const [value, setValue] = useState('tste');
+  const [value, setValue] = useState(0);
   const [motiv, setMotiv] = useState(0);
+  const [imp, setImp] = useState(0);
 
   return (
     <>
     <p>TESTE: {value}</p>
     <p>Motivação: {motiv}</p>
+    <p>Impressão: {imp}</p>
 
 
     <input onChange={(txt) => {
       const name = txt.target.value.toLowerCase().split('');
       
-      const result = recursiveReduce(name.map(v => map[v]));
-      setMotiv(numeroMotivacao(name))
+      const result = recursiveReduce(name.map((v:any) => map[v] || 0));
+      setMotiv(numeroMotivacao(name));
+      setImp(numeroImpressao(name));
 
       
       setValue(result)
