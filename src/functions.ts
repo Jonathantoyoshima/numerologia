@@ -235,3 +235,58 @@ export const numeroCicloVida = (nDest: number, niver: string) => {
 
   return { ciclo1, ciclo2, ciclo3 };
 };
+
+const somarConsecutivos = (array: number[]) => {
+  return array.reduce((resultados, valorAtual, indice, arrayOriginal) => {
+    if (indice < arrayOriginal.length - 1) {
+      const sum = `${valorAtual + arrayOriginal[indice + 1]}`
+        .split("")
+        .map((n) => Number(n));
+      const v = recursiveReduce(sum);
+      resultados.push(v);
+    }
+    return resultados;
+  }, [] as number[]);
+};
+
+let result: number[][] = [];
+
+const lines = (arr: number[]) => {
+  result.push(arr);
+  if (result[result.length - 1].length > 1) {
+    const ln = somarConsecutivos(arr);
+    return lines(ln);
+  }
+
+  return result;
+};
+
+const mapearSequencias = (array: number[]) => {
+  if (array.length === 0) return [];
+
+  const resultado = [];
+  let contagem = 1;
+
+  for (let i = 0; i < array.length; i++) {
+    // Se o próximo elemento é igual ao atual, incrementa a contagem
+    if (i < array.length - 1 && array[i] === array[i + 1]) {
+      contagem++;
+    } else {
+      // Adiciona objetos ao resultado para cada elemento da sequência atual
+      for (let j = 0; j < contagem; j++) {
+        resultado.push({ valor: array[i], tamanho: contagem });
+      }
+      contagem = 1; // Reseta a contagem para a próxima sequência
+    }
+  }
+
+  return resultado;
+};
+
+export const piramideDaVida = (nome: string) => {
+  result = [];
+
+  const n = lines(nome.split("").map((v) => map[v]));
+
+  return n.map((seq) => mapearSequencias(seq));
+};

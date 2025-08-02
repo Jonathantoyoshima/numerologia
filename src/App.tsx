@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Line, Cell } from "./App.style";
 import * as f from "./functions";
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
 
   const [name, setName] = useState("");
   const [niver, setNiver] = useState("");
+
+  const [piramide, setPiramide] = useState<any[]>();
 
   const setValues = (thisname: string, thisniver: string) => {
     const oName = thisname?.toLowerCase().split("") || [];
@@ -51,6 +54,8 @@ function App() {
 
     const aPessoal = f.numerosAnoPessoal(thisniver);
     setAnoPessoal(aPessoal);
+
+    setPiramide(f.piramideDaVida(thisname));
   };
 
   return (
@@ -74,6 +79,17 @@ function App() {
             setValues(name, txt.target.value);
           }}
         />
+        -----
+      </div>
+      <div>
+        Piramide da vida:
+        {piramide?.map((n) => (
+          <Line>
+            {n.map((a: any) => (
+              <Cell $val={a.tamanho}>{a.valor}</Cell>
+            ))}
+          </Line>
+        ))}
       </div>
       ---
       <p>Motivação: {motiv}</p>
