@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Line, Cell } from "./App.style";
-import * as f from "./functions";
+import * as f from "./functions/functions";
+import numeroHarmonicoFn from "./functions/numeroHarmonico";
 
 function App() {
   const [motiv, setMotiv] = useState(0);
@@ -16,7 +17,7 @@ function App() {
   const [anoPessoal, setAnoPessoal] = useState(0);
   const [mesPessoal, setMesPessoal] = useState(0);
   const [diaPessoal, setDiaPessoal] = useState(0);
-  const [subconsciente, setSubconsciente] = useState("");
+  const [subconsciente, setSubconsciente] = useState(0);
 
   const [ciclo1, setCiclo1] = useState({ start: "", end: "", energia: 0 });
   const [ciclo2, setCiclo2] = useState({ start: "", end: "", energia: 0 });
@@ -26,6 +27,11 @@ function App() {
   const [niver, setNiver] = useState("");
 
   const [piramide, setPiramide] = useState<any[]>();
+
+  const [numHarm, setNumHarm] = useState<{
+    numeroHarmonico: number;
+    grupo: number[];
+  }>();
 
   const setValues = (thisname: string, thisniver: string) => {
     const oName = thisname?.toLowerCase().split("") || [];
@@ -56,6 +62,8 @@ function App() {
     setAnoPessoal(aPessoal);
 
     setPiramide(f.piramideDaVida(thisname));
+
+    setNumHarm(numeroHarmonicoFn(thisniver));
   };
 
   return (
@@ -144,6 +152,9 @@ function App() {
         De {ciclo3.start} até {ciclo3.end}
       </p>
       <p>Energia: {ciclo3.energia}</p>
+      <hr />
+      <p>Número Harmonico: {numHarm?.numeroHarmonico} </p>
+      <p>Grupo: {numHarm?.grupo.join(",")}</p>
       <hr />
     </>
   );

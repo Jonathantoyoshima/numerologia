@@ -1,3 +1,4 @@
+import redutor from "./redutor";
 interface Mapping {
   [key: string]: number; // Allows any string key, but value must be number
 }
@@ -66,32 +67,9 @@ const vogais = [
   "õ",
 ];
 
-const recursiveReduce = (values: number[], type?: string) => {
-  const value = values.reduce((p, c) => p + c, 0);
-
-  if (type === "m" && (value === 11 || value === 22)) {
-    return value;
-  }
-
-  if (type === "ciclo" && value === 11) {
-    return value;
-  }
-
-  if (value > 9) {
-    return recursiveReduce(
-      value
-        .toString()
-        .split("")
-        .map((v) => Number(v), type)
-    );
-  }
-
-  return value;
-};
-
 export const numeroMotivacao = (letter: string[]) => {
   const arr = letter.filter((l) => vogais.includes(l));
-  const result = recursiveReduce(
+  const result = redutor(
     arr.map((v) => map[v]),
     "m"
   );
@@ -100,22 +78,22 @@ export const numeroMotivacao = (letter: string[]) => {
 
 export const numeroImpressao = (letter: string[]) => {
   const arr = letter.filter((l) => !vogais.includes(l));
-  const result = recursiveReduce(arr.map((v) => map[v]));
+  const result = redutor(arr.map((v) => map[v]));
   return result;
 };
 
 export const numeroExpressao = (letter: string[]) => {
-  const result = recursiveReduce(letter.map((v) => map[v]));
+  const result = redutor(letter.map((v) => map[v]));
   return result;
 };
 
 export const numeroDestino = (niver: number[]) => {
-  const result = recursiveReduce(niver, "m");
+  const result = redutor(niver, "m");
   return result;
 };
 
 export const numeroMissao = (base: number) => {
-  const result = recursiveReduce(
+  const result = redutor(
     String(base)
       .split("")
       .map((n) => Number(n)),
@@ -172,7 +150,7 @@ export const numerosAnoPessoal = (niver: string) => {
 
   const valido: string = `${dia}${mes}${ano}`;
 
-  return recursiveReduce(
+  return redutor(
     valido
       .toLowerCase()
       .split("")
@@ -183,7 +161,7 @@ export const numerosAnoPessoal = (niver: string) => {
 export const numerosMesPessoal = (niver: string, mes: number) => {
   const ano = validoAnoPessoal(niver);
   const valido = `${mes}${ano}`;
-  return recursiveReduce(
+  return redutor(
     valido
       .toLowerCase()
       .split("")
@@ -193,7 +171,7 @@ export const numerosMesPessoal = (niver: string, mes: number) => {
 
 export const numerosDiaPessoal = (mp: number, dia: number) => {
   const valido = `${mp + dia}`;
-  return recursiveReduce(
+  return redutor(
     valido
       .toLowerCase()
       .split("")
@@ -202,8 +180,7 @@ export const numerosDiaPessoal = (mp: number, dia: number) => {
 };
 
 export const numeroRespostaSubconsciente = (nLicaoCarmica: number[]) => {
-  return nLicaoCarmica.map((n) => 9 - n).join(", ");
-  // 9 - o número de lições cármicas
+  return 9 - nLicaoCarmica.length;
 };
 
 export const numeroCicloVida = (nDest: number, niver: string) => {
@@ -215,7 +192,7 @@ export const numeroCicloVida = (nDest: number, niver: string) => {
   const ciclo1 = {
     start: `${ano}`,
     end: `${Number(ano) + duracaoCiclo}`,
-    energia: recursiveReduce(
+    energia: redutor(
       mes.split("").map((n) => Number(n)),
       "ciclo"
     ),
@@ -224,13 +201,13 @@ export const numeroCicloVida = (nDest: number, niver: string) => {
   const ciclo2 = {
     start: `${Number(ano) + duracaoCiclo}`,
     end: `${Number(ano) + duracaoCiclo + 27}`,
-    energia: recursiveReduce(dia.split("").map((n) => Number(n))),
+    energia: redutor(dia.split("").map((n) => Number(n))),
   };
 
   const ciclo3 = {
     start: `${Number(ano) + duracaoCiclo + 27}`,
     end: "final da vida",
-    energia: recursiveReduce(ano.split("").map((n) => Number(n))),
+    energia: redutor(ano.split("").map((n) => Number(n))),
   };
 
   return { ciclo1, ciclo2, ciclo3 };
@@ -242,7 +219,7 @@ const somarConsecutivos = (array: number[]) => {
       const sum = `${valorAtual + arrayOriginal[indice + 1]}`
         .split("")
         .map((n) => Number(n));
-      const v = recursiveReduce(sum);
+      const v = redutor(sum);
       resultados.push(v);
     }
     return resultados;
