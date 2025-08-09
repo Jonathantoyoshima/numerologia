@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Line, Cell } from "./App.style";
 import * as f from "./functions/functions";
 import numeroHarmonicoFn from "./functions/numeroHarmonico";
+import numeroPsiquicoFn from "./functions/numeroPsiquico";
 
 function App() {
   const [motiv, setMotiv] = useState(0);
@@ -31,6 +32,10 @@ function App() {
   const [numHarm, setNumHarm] = useState<{
     numeroHarmonico: number;
     grupo: number[];
+  }>();
+  const [numPsi, setNumPsi] = useState<{
+    dia: string;
+    numeroPsiquico: number;
   }>();
 
   const setValues = (thisname: string, thisniver: string) => {
@@ -64,6 +69,8 @@ function App() {
     setPiramide(f.piramideDaVida(thisname));
 
     setNumHarm(numeroHarmonicoFn(thisniver));
+
+    setNumPsi(numeroPsiquicoFn(thisniver));
   };
 
   return (
@@ -155,6 +162,8 @@ function App() {
       <hr />
       <p>Número Harmonico: {numHarm?.numeroHarmonico} </p>
       <p>Grupo: {numHarm?.grupo.join(",")}</p>
+      <hr />
+      <p>Número Psiquico: {numPsi?.numeroPsiquico} </p>
       <hr />
     </>
   );
