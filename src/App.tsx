@@ -161,7 +161,7 @@ function App() {
       <p>Energia: {ciclo3.energia}</p>
       <hr />
       <p>Número Harmonico: {numHarm?.numeroHarmonico} </p>
-      <p>Grupo: {numHarm?.grupo.join(",")}</p>
+      <p>Grupo: {numHarm?.grupo?.join(",")}</p>
       <hr />
       <p>Número Psiquico: {numPsi?.numeroPsiquico} </p>
       <hr />
