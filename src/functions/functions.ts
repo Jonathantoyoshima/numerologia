@@ -160,7 +160,7 @@ export const numerosAnoPessoal = (niver: string) => {
 
 export const numerosMesPessoal = (niver: string, mes: number) => {
   const ano = validoAnoPessoal(niver);
-  const valido = `${mes}${ano}`;
+  const valido = `${mes + ano}`;
   return redutor(
     valido
       .toLowerCase()
