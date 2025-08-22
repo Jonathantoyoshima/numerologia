@@ -260,10 +260,10 @@ const mapearSequencias = (array: number[]) => {
   return resultado;
 };
 
-export const piramideDaVida = (nome: string) => {
+export const piramideDaVida = (nome: string[]) => {
   result = [];
 
-  const n = lines(nome.split("").map((v) => map[v]));
+  const n = lines(nome.map((v) => map[v]));
 
   return n.map((seq) => mapearSequencias(seq));
 };

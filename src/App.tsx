@@ -1,8 +1,11 @@
+import type IMomentoDecisivo from "./interface/momentoDecisivo";
+
 import { useState } from "react";
 import { Line, Cell } from "./App.style";
 import * as f from "./functions/functions";
 import numeroHarmonicoFn from "./functions/numeroHarmonico";
 import numeroPsiquicoFn from "./functions/numeroPsiquico";
+import momentoDecisivoFn from "./functions/momentoDecisivo";
 
 function App() {
   const [motiv, setMotiv] = useState(0);
@@ -29,6 +32,8 @@ function App() {
 
   const [piramide, setPiramide] = useState<any[]>();
 
+  const [mmtoDecisivo, setMmtoDecisivo] = useState<IMomentoDecisivo>();
+
   const [numHarm, setNumHarm] = useState<{
     numeroHarmonico: number;
     grupo: number[];
@@ -39,7 +44,12 @@ function App() {
   }>();
 
   const setValues = (thisname: string, thisniver: string) => {
-    const oName = thisname?.toLowerCase().split("") || [];
+    const oName =
+      thisname
+        ?.toLowerCase()
+        .replace(/[^a-záàâãéèêíïóôõöúçñ]/g, "")
+        .split("") || [];
+
     const oNiver = thisniver?.split("").map((n) => Number(n)) || [];
 
     const nMotiv = f.numeroMotivacao(oName);
@@ -66,11 +76,13 @@ function App() {
     const aPessoal = f.numerosAnoPessoal(thisniver);
     setAnoPessoal(aPessoal);
 
-    setPiramide(f.piramideDaVida(thisname));
+    setPiramide(f.piramideDaVida(oName));
 
     setNumHarm(numeroHarmonicoFn(thisniver));
 
     setNumPsi(numeroPsiquicoFn(thisniver));
+
+    setMmtoDecisivo(momentoDecisivoFn(thisniver));
   };
 
   return (
@@ -164,6 +176,12 @@ function App() {
       <p>Grupo: {numHarm?.grupo?.join(",")}</p>
       <hr />
       <p>Número Psiquico: {numPsi?.numeroPsiquico} </p>
+      <hr />
+      <p>Momentos decisivos:</p>
+      <p>1o Momento Decisivo: {mmtoDecisivo?.momento1 || 0}</p>
+      <p>2o Momento Decisivo: {mmtoDecisivo?.momento2 || 0}</p>
+      <p>3o Momento Decisivo: {mmtoDecisivo?.momento3 || 0}</p>
+      <p>4o Momento Decisivo: {mmtoDecisivo?.momento4 || 0}</p>
       <hr />
     </>
   );
